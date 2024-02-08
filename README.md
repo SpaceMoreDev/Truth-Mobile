@@ -1,2 +1,1 @@
-# DungeonGame
-A procedural dungeon generation game. 
+A dungeon mobile game. 
