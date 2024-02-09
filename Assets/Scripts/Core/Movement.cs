@@ -7,7 +7,7 @@ namespace Behaviours{
         // ----- private variables -----
         private CharacterController _controller;
         private float _speed = 2.0f;
-        private float _turningSpeed = 5f;
+        public float _turningSpeed = 5f;
         private float _gravityValue = 18.81f;
         private bool _grounded = false;
         private Transform _cameraTransform;

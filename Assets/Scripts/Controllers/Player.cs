@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Behaviours;
-using UnityEngine.VFX;
+
 
 
 public class InputManager
@@ -25,7 +25,7 @@ public class InputManager
 
 public class Player : MonoBehaviour
 {
-    private CharacterController _controller;
+    public CharacterController _controller;
     private Movement _playermovement;
 
 
@@ -37,6 +37,17 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float speed = 5f;
+    [SerializeField]
+    private float rotationSpeed = 2f;
+    
+
+    private float RotationSpeed
+    {
+        set { 
+            if(_playermovement != null) _playermovement._turningSpeed = rotationSpeed;
+        }
+        get{return rotationSpeed;}
+    }
 
     [SerializeField]
     private float gravityValue;
@@ -44,8 +55,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform camera;
 
-    [SerializeField]
-    private VisualEffect VFX_Slash;
+    void OnValidate() {
+        RotationSpeed = rotationSpeed;
+    }
 
     void Awake()
     {
@@ -54,16 +66,10 @@ public class Player : MonoBehaviour
         InputManager.ToggleActionMap(InputManager.inputActions.Movement);
     }
 
-    public void Attack()
-    {
-        print("Attacked");
-        VFX_Slash.Play();
-    }
-
     void Start()
     {
         _controller = GetComponent<CharacterController>();
-        _playermovement = new Movement(_controller, speed, gravityValue, camera, speed/2);
+        _playermovement = new Movement(_controller, speed, gravityValue, camera, RotationSpeed);
         Look.performed += lookAround;
 
         InputSystem.onDeviceChange +=
