@@ -26,7 +26,7 @@ public class InputManager
 public class Player : MonoBehaviour
 {
     public CharacterController _controller;
-    private Movement _playermovement;
+    public Movement _playermovement;
 
 
     #region Input Actions
@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
     private float gravityValue;
 
     [SerializeField]
-    private Transform camera;
+    public Transform camera;
 
     void OnValidate() {
         RotationSpeed = rotationSpeed;

@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Dynamic;
+using Behaviours;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
@@ -35,13 +38,20 @@ public class PlayerAnimController : MonoBehaviour
     public void AttackLogic()
     {
         _animator.Play("Attack");
-        print("Attacked");
         VFX_Slash.Play();
+
+        Vector3 movementVelocity = transform.forward * 6f;
+        _player._playermovement.SetVelocity(new Vector3(movementVelocity.x,0,movementVelocity.z));
+        Invoke("EndAttack",0.2f);
+    }
+    void EndAttack()
+    {
+        _player._playermovement.SetVelocity(Vector3.zero);
     }
 
     private void FixedUpdate() {
         float speed =  Movement.ReadValue<Vector2>().magnitude;
         _animator.SetFloat("Speed",speed,0.15f,Time.fixedDeltaTime);
-        print(speed);
+        //print(speed);
     }
 }
