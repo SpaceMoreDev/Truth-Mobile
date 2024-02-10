@@ -2,7 +2,7 @@
     "name": "Core_Controls",
     "maps": [
         {
-            "name": "Movement",
+            "name": "General",
             "id": "31e6e686-5f8e-4e99-9ae1-079d8170bb86",
             "actions": [
                 {
@@ -225,6 +225,17 @@
                     "name": "",
                     "id": "df406772-77d4-4b7c-97d1-53dcef5122e6",
                     "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aefe993a-f965-4441-b489-e1aca5cc1faa",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

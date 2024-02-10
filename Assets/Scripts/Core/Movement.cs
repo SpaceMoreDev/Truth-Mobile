@@ -7,7 +7,7 @@ namespace Behaviours{
         // ----- private variables -----
         private CharacterController _controller;
         private float _speed = 2.0f;
-        public float _turningSpeed = 5f;
+        private float _turningSpeed = 5f;
         private float _gravityValue = 18.81f;
         private bool _grounded = false;
         private Transform _cameraTransform;
@@ -20,6 +20,7 @@ namespace Behaviours{
         public bool CanMove { get{return _canMove;} set{_canMove = value;}}
         public Vector3 CurrentVelocity { get{return _currentVelocity;}}
         public float Speed { get{return _speed;} set{_speed = value;}}
+        public float TurnSpeed { get{return _turningSpeed; } set{ _turningSpeed = value;} }
         public bool IsSprinting = false;
 
 
@@ -29,8 +30,14 @@ namespace Behaviours{
             _controller = controller;
             withCamera = false;
         }
+        public Movement(CharacterController controller, Transform CameraTransform)
+        {
+            _controller = controller;
+            _cameraTransform = CameraTransform;
+            withCamera = true;
+        }
 
-        public Movement(CharacterController controller, float Speed,float GravityValue, Transform CameraTransform, float TurningSpeed)
+        public Movement(CharacterController controller, Transform CameraTransform, float Speed, float TurningSpeed, float GravityValue)
         {
             _controller = controller;
             _speed = Speed;
@@ -40,19 +47,17 @@ namespace Behaviours{
             withCamera = true;
         }
 
-        /// <summary>
-        /// For setting the current velocity for movement.
-        /// </summary>
-        /// <param name="newVelocity">New velocity value</param>
         public void SetVelocity(Vector3 newVelocity)
         {
             _currentVelocity = newVelocity;
         }
+
+
         /// <summary>
         /// Movement behavior function for 2D input.
         /// </summary>
         /// <param name="deltaTime"> Time between each frame </param>
-        /// <param name="input"> The 2D direction for movement </param>
+        /// <param name="input"> The input direction for movement </param>
         public void Move(float deltaTime, Vector2 input)
         {   if(_canMove)  
             {
@@ -78,36 +83,6 @@ namespace Behaviours{
             }
             _currentVelocity.y -= _gravityValue * deltaTime;
             _controller.Move(_currentVelocity * deltaTime); // for gravity
-        }
-
-        /// <summary>
-        /// Rotate character based on camera and direction.
-        /// </summary>
-        /// <param name="deltaTime">Time between each frame</param>
-        /// <param name="move">movement direction in 3D</param>
-        public void Rotate(Vector2 input)
-        {    
-            if(_canMove)
-            {   
-                _grounded = _controller.isGrounded;
-
-                if (_grounded && _currentVelocity.y < 0)
-                    _currentVelocity.y = 0f;
-                
-                Vector3 moveDirection = new Vector3(input.x, 0, input.y);
-                moveDirection = Quaternion.AngleAxis(_cameraTransform.rotation.eulerAngles.y, Vector3.up) * moveDirection;
-                moveDirection.Normalize();
-
-                
-                if (moveDirection != Vector3.zero)
-                {
-                   Quaternion lookRotation = Quaternion.LookRotation(moveDirection,Vector3.up);
-                   _controller.transform.rotation = Quaternion.RotateTowards(_controller.transform.rotation, lookRotation, _turningSpeed );
-                }
-            }
-
-            _currentVelocity.y -= _gravityValue *Time.deltaTime;
-            _controller.Move(_currentVelocity *Time.deltaTime); // for gravity
         }
     }
 }

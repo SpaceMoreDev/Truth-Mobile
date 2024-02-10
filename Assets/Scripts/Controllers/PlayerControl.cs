@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Behaviours;
-
-
+using UnityEditor.Timeline.Actions;
 
 public class InputManager
 {
@@ -23,37 +22,39 @@ public class InputManager
     }
 }
 
-public class Player : MonoBehaviour
+public class PlayerControl : MonoBehaviour
 {
+
+    #region Public
+    [HideInInspector]
     public CharacterController _controller;
+    [HideInInspector]
     public Movement _playermovement;
-
-
-    #region Input Actions
-    public static InputAction Movement;
-    public static InputAction Look;
+    [SerializeField]
+    public Transform camera;
     #endregion
 
-
+    #region Private
     [SerializeField]
     private float speed = 5f;
     [SerializeField]
     private float rotationSpeed = 2f;
-    
-
+    [SerializeField]
+    private float gravityValue = 18.81f;
     private float RotationSpeed
     {
         set { 
-            if(_playermovement != null) _playermovement._turningSpeed = rotationSpeed;
+            if(_playermovement != null) _playermovement.TurnSpeed = rotationSpeed;
         }
         get{return rotationSpeed;}
     }
+    #endregion
 
-    [SerializeField]
-    private float gravityValue;
-
-    [SerializeField]
-    public Transform camera;
+    #region Input Actions
+    public  InputAction Movement;
+    public  InputAction Look;
+    public  InputAction Attack;
+    #endregion
 
     void OnValidate() {
         RotationSpeed = rotationSpeed;
@@ -61,26 +62,23 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        Movement = InputManager.inputActions.Movement.Move;
-        Look = InputManager.inputActions.Movement.Look; 
-        InputManager.ToggleActionMap(InputManager.inputActions.Movement);
-    }
+        Movement = InputManager.inputActions.General.Move;
+        Look = InputManager.inputActions.General.Look;
+        Attack = InputManager.inputActions.General.Attack;
 
-    void Start()
-    {
+        InputManager.inputActions.General.Enable();
         _controller = GetComponent<CharacterController>();
-        _playermovement = new Movement(_controller, speed, gravityValue, camera, RotationSpeed);
-        Look.performed += lookAround;
+        _playermovement = new Movement(_controller, camera, speed, rotationSpeed, gravityValue);
 
         InputSystem.onDeviceChange +=
         (device, change) =>
         {
-           
+
             switch (change)
             {
                 case InputDeviceChange.Added:
                     // New Device.
-                    if(device is Gamepad)
+                    if (device is Gamepad)
                     {
                         print("Using Controller");
                     }
@@ -99,14 +97,6 @@ public class Player : MonoBehaviour
                     break;
             }
         };
-
     }
 
-    void lookAround(InputAction.CallbackContext ctx)
-    {
-    }
-
-    private void FixedUpdate() {
-        _playermovement.Move(Time.fixedDeltaTime, Movement.ReadValue<Vector2>());
-    }
 }
