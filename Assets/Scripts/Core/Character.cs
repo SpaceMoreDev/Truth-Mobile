@@ -16,7 +16,6 @@ namespace Characters
 
         public Character() {
             health = new Health();
-            health.Died += Die;
         }
 
         ~Character()
@@ -48,6 +47,7 @@ namespace Characters
         {
             _character = character;
             health = character.health;
+            health.Died += Die;
         }
 
 
@@ -73,8 +73,15 @@ namespace Characters
         {   
         }
 
+        public override void TakeDamage(float damage)
+        {
+            base.TakeDamage(damage);
+            UnityEngine.MonoBehaviour.print($"health {health.GetRemainingHealth()}");
+        }
+
         public override void Die()
         {
+            base.Die();
             UnityEngine.MonoBehaviour.print("Enemy slain!");
         }
     }

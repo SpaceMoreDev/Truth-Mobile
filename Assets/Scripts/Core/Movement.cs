@@ -19,6 +19,7 @@ namespace Behaviours{
         // ----- public variables -----
         public bool CanMove { get{return _canMove;} set{_canMove = value;}}
         public Vector3 CurrentVelocity { get{return _currentVelocity;}}
+        public CharacterController PlayerController { get{return _controller; } }
         public float Speed { get{return _speed;} set{_speed = value;}}
         public float TurnSpeed { get{return _turningSpeed; } set{ _turningSpeed = value;} }
         public bool IsSprinting = false;

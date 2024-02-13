@@ -1,5 +1,7 @@
 using UnityEngine;
 using Behaviours;
+using Characters;
+using MyBox;
 
 class PlayerCommands : MonoBehaviour
 {
@@ -8,17 +10,47 @@ class PlayerCommands : MonoBehaviour
     internal Movement _playermovement;
     internal Vector2 InputDirection = Vector2.zero;
 
+    G_Enemy enemyTarget;
     public void StartAttack()
     {
         _animator.Play("Attack");
 
-        Vector3 movementVelocity = transform.forward * 6f;
-        _playermovement.SetVelocity(new Vector3(movementVelocity.x, 0, movementVelocity.z));
-        Invoke("EndAttack", 0.2f);
+        float min = Mathf.Infinity;
+
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 5f);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.TryGetComponent<G_Enemy>(out G_Enemy target))
+            {
+                float distance = (target.transform.position - transform.position).magnitude;
+                if (distance < min)
+                {
+                    min = distance;
+                    enemyTarget = target;
+                }
+            }
+        }
+        if (enemyTarget != null)
+        {
+            Vector3 movementVelocity = (enemyTarget.transform.position - transform.position) * 6f;
+            _playermovement.SetVelocity(new Vector3(movementVelocity.x, 0, movementVelocity.z));
+            _playermovement.PlayerController.transform.forward = movementVelocity;
+            Invoke("EndAttack", 0.2f);
+        }
     }
     private void EndAttack()
     {
         _playermovement.SetVelocity(Vector3.zero);
+
+        enemyTarget.TakeDamage(21f);
+        enemyTarget = null;
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 5f);
     }
 
     public void lookAround()

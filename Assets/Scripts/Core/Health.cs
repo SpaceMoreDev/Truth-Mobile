@@ -12,14 +12,12 @@ namespace Behaviours
         {
             set
             {
-                if (healthpoints < healthMax)
+                if (healthpoints <= healthMax 
+                    && healthpoints > 0)
                 {
-                    if (healthpoints > 0f)
-                    { healthpoints = value; }
-                    else
-                    {
-                        Died?.Invoke();
-                    }
+                    healthpoints = value;
+                    if (healthpoints <= 0f)
+                    { Died?.Invoke(); }
                 }
             }
             get { return healthpoints; }
@@ -30,7 +28,8 @@ namespace Behaviours
             healthRemaining = Math.Clamp(initialHealth, 0.0f, healthMax);
         }
         public Health()
-        { 
+        {
+            healthRemaining = healthMax;
         }
 
         public static Health operator +(Health health, float amount)
@@ -44,9 +43,10 @@ namespace Behaviours
             health.healthRemaining -= amount;
             return health;
         }
+
         public float GetRemainingHealth()
         {
-            return healthRemaining;
+            return healthRemaining/100;
         }
 
     }
