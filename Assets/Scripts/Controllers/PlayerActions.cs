@@ -49,7 +49,7 @@ public class PlayerActions : PlayerControl
     }
 
     void E_Move(InputAction.CallbackContext ctx){
-        commands.InputDirection = ctx.ReadValue<Vector2>().normalized;
+        commands.InputDirection = ctx.ReadValue<Vector2>();
     }
 
     void E_lookAround(InputAction.CallbackContext ctx){

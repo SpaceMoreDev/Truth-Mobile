@@ -23,6 +23,7 @@ namespace Behaviours{
         public float Speed { get{return _speed;} set{_speed = value;}}
         public float TurnSpeed { get{return _turningSpeed; } set{ _turningSpeed = value;} }
         public bool IsSprinting = false;
+        public bool IsGrounded { get { return _grounded; } }
 
 
 
@@ -84,6 +85,22 @@ namespace Behaviours{
             }
             _currentVelocity.y -= _gravityValue * deltaTime;
             _controller.Move(_currentVelocity * deltaTime); // for gravity
+        }
+
+        public void Jump(float jumpHeight)
+        {
+            if (_canMove)
+            {
+                _grounded = _controller.isGrounded;
+
+                if (_grounded && _currentVelocity.y < 0)
+                    _currentVelocity.y = 0f;
+
+                if (_grounded)
+                {
+                    _currentVelocity.y += Mathf.Sqrt(jumpHeight * 5.0f * _gravityValue);
+                }
+            }
         }
     }
 }

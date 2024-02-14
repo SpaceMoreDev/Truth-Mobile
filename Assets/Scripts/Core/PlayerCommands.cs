@@ -41,10 +41,11 @@ class PlayerCommands : MonoBehaviour
     private void EndAttack()
     {
         _playermovement.SetVelocity(Vector3.zero);
-
-        enemyTarget.TakeDamage(21f);
-        enemyTarget = null;
-
+        if (enemyTarget != null)
+        {
+            enemyTarget.TakeDamage(21f);
+            enemyTarget = null;
+        }
     }
 
     private void OnDrawGizmos()
@@ -60,13 +61,19 @@ class PlayerCommands : MonoBehaviour
 
     public void Jump()
     {
-
+        print("Jumped");
+        _playermovement.Jump(1f);
+        if (_playermovement.IsGrounded)
+        {
+            _animator.SetTrigger("Jump");
+        }
     }
 
     private void FixedUpdate()
     {
         _playermovement.Move(Time.fixedDeltaTime, InputDirection);
-        float animationSpeed = InputDirection.magnitude;
-        _animator.SetFloat("Speed", animationSpeed, 0.15f, Time.fixedDeltaTime);
+        float animationSpeed = InputDirection.magnitude ;
+        _animator.SetFloat("Speed", animationSpeed, 0.2f, Time.fixedDeltaTime);
+        _animator.SetBool("OnGround", _playermovement.IsGrounded);
     }
 }
