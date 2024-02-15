@@ -38,6 +38,7 @@ public class PlayerActions : PlayerControl
         Attack.performed += E_Attack;
         Movement.canceled += E_Move;
         Look.performed += E_lookAround;
+        Jump.performed += E_Jump;
     }
 
     private void OnDestroy()
@@ -46,10 +47,13 @@ public class PlayerActions : PlayerControl
         Attack.performed -= E_Attack;
         Movement.canceled -= E_Move;
         Look.performed -= E_lookAround;
+        Jump.performed -= E_Jump;
+
     }
 
     void E_Move(InputAction.CallbackContext ctx){
-        commands.InputDirection = ctx.ReadValue<Vector2>();
+        commands.InputDirection = ctx.ReadValue<Vector2>().normalized;
+        print(commands.InputDirection);
     }
 
     void E_lookAround(InputAction.CallbackContext ctx){
@@ -62,7 +66,7 @@ public class PlayerActions : PlayerControl
         actionControl.Start();  
     }
 
-    void Jump(InputAction.CallbackContext ctx) {
+    void E_Jump(InputAction.CallbackContext ctx) {
         actionControl.SetCommand(commands.Jump);
         actionControl.Start();
     }

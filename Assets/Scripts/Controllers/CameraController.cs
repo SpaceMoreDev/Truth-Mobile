@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
         //print(newHeight);
 
         newpos = Vector3.Lerp(transform.position, target.position, Time.fixedDeltaTime * FollowSpeed);
-        newpos.x = Distance;
+        newpos.z = -Distance;
         newpos.y = Math.Clamp(newHeight, 1f, Height);
 
         transform.position = newpos;

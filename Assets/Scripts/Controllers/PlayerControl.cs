@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Behaviours;
 
+[DefaultExecutionOrder(-2)]
 public class InputManager
 {
     public static Core_Controls inputActions = new Core_Controls();
@@ -20,6 +21,7 @@ public class InputManager
     }
 }
 
+[DefaultExecutionOrder(-1)]
 public class PlayerControl : MonoBehaviour
 {
 
@@ -46,12 +48,15 @@ public class PlayerControl : MonoBehaviour
         }
         get{return rotationSpeed;}
     }
+
+    internal bool IsTouching = false;
     #endregion
 
     #region Input Actions
     public  InputAction Movement;
     public  InputAction Look;
     public  InputAction Attack;
+    public  InputAction Jump;
     #endregion
 
     void OnValidate() {
@@ -63,8 +68,9 @@ public class PlayerControl : MonoBehaviour
         Movement = InputManager.inputActions.General.Move;
         Look = InputManager.inputActions.General.Look;
         Attack = InputManager.inputActions.General.Attack;
+        Jump = InputManager.inputActions.General.Jump;
 
-        InputManager.inputActions.General.Enable();
+        InputManager.inputActions.Enable();
         _controller = GetComponent<CharacterController>();
         _playermovement = new Movement(_controller, camera, speed, rotationSpeed, gravityValue);
 
