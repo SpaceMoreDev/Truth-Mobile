@@ -297,7 +297,7 @@ public partial class @Core_Controls: IInputActionCollection2, IDisposable
                     ""id"": ""590e6e7a-e25c-40e6-a56a-ac37225cf48a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press"",
+                    ""interactions"": ""Press,Tap"",
                     ""initialStateCheck"": true
                 },
                 {

@@ -24,13 +24,15 @@ public class PlayerActions : PlayerControl
 {
     PlayerCommands commands;
     internal ActionControl actionControl;
-
+    SwipeDetection swipeDetection;
     PlayerActions() {
         actionControl = new();
     }
 
     private void Start()
     {
+        swipeDetection = GetComponent<SwipeDetection>();
+
         commands = GetComponent<PlayerCommands>();
         commands._playermovement = _playermovement;
 
@@ -38,6 +40,10 @@ public class PlayerActions : PlayerControl
         Attack.performed += E_Attack;
         Movement.canceled += E_Move;
         Look.performed += E_lookAround;
+
+        swipeDetection.SwipedUP += CoreJump;
+        swipeDetection.TouchTap += CoreAttack;
+
         Jump.performed += E_Jump;
     }
 
@@ -47,6 +53,10 @@ public class PlayerActions : PlayerControl
         Attack.performed -= E_Attack;
         Movement.canceled -= E_Move;
         Look.performed -= E_lookAround;
+
+        swipeDetection.SwipedUP -= CoreJump;
+        swipeDetection.TouchTap -= CoreAttack;
+
         Jump.performed -= E_Jump;
 
     }
@@ -62,11 +72,21 @@ public class PlayerActions : PlayerControl
     }
 
     void E_Attack(InputAction.CallbackContext ctx) {
-        actionControl.SetCommand(commands.StartAttack);
-        actionControl.Start();  
+        CoreAttack();
     }
 
     void E_Jump(InputAction.CallbackContext ctx) {
+        CoreJump();
+    }
+
+    public void CoreAttack()
+    {
+        actionControl.SetCommand(commands.StartAttack);
+        actionControl.Start();
+    }
+
+    public void CoreJump()
+    {
         actionControl.SetCommand(commands.Jump);
         actionControl.Start();
     }

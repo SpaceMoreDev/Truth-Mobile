@@ -10,7 +10,10 @@ class PlayerCommands : MonoBehaviour
     internal Movement _playermovement;
     internal Vector2 InputDirection = Vector2.zero;
 
+    
+
     G_Enemy enemyTarget;
+
     public void StartAttack()
     {
         _animator.Play("Attack");
